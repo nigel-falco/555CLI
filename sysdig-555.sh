@@ -26,34 +26,36 @@ display_menu() {
     echo "7. Exit"
 }
 
-# Function to simulate SCARLETEEL
-simulate_scarleteel() {
-    echo "Simulating SCARLETEEL..."
-    # Add your simulation logic here
-}
+# Function to simulate tasks with a countdown timer
+simulate_task() {
+    task_name=$1
+    echo "Simulating $task_name..."
+    
+    end_time=$((SECONDS + 300))  # 5 minutes = 300 seconds
+    
+    while [ $SECONDS -lt $end_time ]; do
+        remaining=$((end_time - SECONDS))
+        mins=$((remaining / 60))
+        secs=$((remaining % 60))
+        
+        # Move cursor to top right corner and display countdown
+        tput cup 0 $(($(tput cols) - 10))
+        printf "%02d:%02d" $mins $secs
+        
+        sleep 1
 
-# Function to simulate SSH_Snake
-simulate_ssh_snake() {
-    echo "Simulating SSH_Snake..."
-    # Add your simulation logic here
-}
-
-# Function to simulate LABRAT
-simulate_labrat() {
-    echo "Simulating LABRAT..."
-    # Add your simulation logic here
-}
-
-# Function to simulate AMBERSQUID
-simulate_ambersquid() {
-    echo "Simulating AMBERSQUID..."
-    # Add your simulation logic here
-}
-
-# Function to simulate LLM-jacking
-simulate_llm_jacking() {
-    echo "Simulating LLM-jacking..."
-    # Add your simulation logic here
+        # Check if the user has pressed a key
+        if read -t 0; then
+            read -n 1 -s
+            break
+        fi
+    done
+    
+    # Clear the timer
+    tput cup 0 $(($(tput cols) - 10))
+    printf "          "
+    
+    echo ""
 }
 
 # Function to apply a YAML file
@@ -69,24 +71,27 @@ while true; do
 
     case $option in
         1)
-            simulate_scarleteel
+            simulate_task "SCARLETEEL"
             ;;
         2)
-            simulate_ssh_snake
+            simulate_task "SSH_Snake"
             ;;
         3)
-            simulate_labrat
+            simulate_task "LABRAT"
             ;;
         4)
-            simulate_ambersquid
+            simulate_task "AMBERSQUID"
             ;;
         5)
-            simulate_llm_jacking
+            simulate_task "LLM-jacking"
             ;;
         6)
             apply_yaml
             ;;
         7)
+            # Clear the timer if exiting
+            tput cup 0 $(($(tput cols) - 10))
+            printf "          "
             echo "Exiting..."
             break
             ;;
